@@ -98,6 +98,9 @@
   .install strong{display:block;font-size:15px;letter-spacing:-.01em}
   .install .desc{display:block;margin-top:3px;font-size:12.5px;color:rgba(255,255,255,.88)}
   .install .arrow{flex:0 0 auto;color:rgba(255,255,255,.92);font-size:18px;line-height:1}
+  .hint{margin:10px 2px 0;font-size:12.5px;color:var(--muted);line-height:1.55}
+  .hint[hidden]{display:none}
+  .hint b{color:var(--ink-soft);font-weight:700}
 </style>
 </head>
 <body>
@@ -116,6 +119,7 @@
     </span>
     <span class="arrow" aria-hidden="true">›</span>
   </button>
+  <p class="hint" id="installHint" hidden>설치 창을 닫았다면 크롬 오른쪽 위 <b>⋮ → 홈 화면에 추가</b>로도 설치할 수 있어요.</p>
 
   <ul class="tools">
     <li>
@@ -168,7 +172,12 @@
 
   // 2) 설치 버튼 — beforeinstallprompt 가 올 때만 보이고, 설치됐거나 지원 안 하면 숨김
   var btn = document.getElementById('installBtn');
+  var hint = document.getElementById('installHint');
   var deferred = null;
+  function showHint() {
+    if (btn) btn.hidden = true;
+    if (hint) hint.hidden = false;
+  }
   function isStandalone() {
     var mq = window.matchMedia;
     return !!((mq && mq('(display-mode: standalone)').matches) ||
@@ -186,18 +195,25 @@
 
   if (btn) {
     btn.addEventListener('click', async function () {
-      if (!deferred) { btn.hidden = true; return; }
-      var e = deferred;
+      if (!deferred) { showHint(); return; }
+      var ev = deferred;
       deferred = null;
-      e.prompt();
-      try { await e.userChoice; } catch (err) { /* 사용자가 닫아도 조용히 */ }
-      btn.hidden = true;
+      try {
+        ev.prompt();
+        var choice = await ev.userChoice;
+        if (choice && choice.outcome === 'accepted') { if (btn) btn.hidden = true; return; }
+        showHint();
+      } catch (err) {
+        // 프롬프트를 다시 쓸 수 없는 상태 — 수동 설치 경로를 안내
+        showHint();
+      }
     });
   }
 
   window.addEventListener('appinstalled', function () {
     deferred = null;
     if (btn) btn.hidden = true;
+    if (hint) hint.hidden = true;
   });
 })();
 </script>
