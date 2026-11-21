@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0e1014" media="(prefers-color-scheme: dark)" />
+<meta name="description" content="PDF↔이미지 변환, 이미지 압축·포맷 변환, 비율 리사이즈·콜라쥬 — 모두 기기 안에서만 처리하는 미니 도구 3종." />
+<title>포켓 툴 · 폰에서 바로 쓰는 미니 도구 3종</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230e1014'/%3E%3Ctext x='50' y='54' font-size='52' text-anchor='middle' dominant-baseline='central'%3E%F0%9F%A7%B0%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#14161a; --ink-soft:#5b6472;
+    --muted:#7c8593; --line:#e7e9ee; --chip:#f1f3f7;
+    --shadow:0 1px 2px rgba(16,20,28,.05), 0 8px 24px -12px rgba(16,20,28,.16);
+    --teal:#0e7c70; --teal-soft:#e7f4f1;
+    --indigo:#4f46e5; --indigo-soft:#ecebfe;
+    --rose:#e5484d; --rose-soft:#fdecec;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e1014; --card:#171a20; --ink:#f2f4f8; --ink-soft:#b9c0cc;
+      --muted:#8d95a3; --line:#252a33; --chip:#20252e;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+      --teal:#3ec3b3; --teal-soft:#12312e;
+      --indigo:#9c9bfa; --indigo-soft:#1e1f3a;
+      --rose:#ff7b80; --rose-soft:#331b1d;
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+    padding:calc(env(safe-area-inset-top) + 28px) 18px calc(env(safe-area-inset-bottom) + 32px);
+    min-height:100dvh;
+  }
+  .wrap{max-width:520px;margin:0 auto}
+  header{margin-bottom:22px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+    letter-spacing:.02em;color:var(--ink-soft);background:var(--chip);
+    border:1px solid var(--line);border-radius:999px;padding:5px 11px;
+  }
+  h1{font-size:26px;line-height:1.25;letter-spacing:-.02em;margin:14px 0 8px}
+  .sub{margin:0;color:var(--ink-soft);font-size:14.5px}
+  .sub b{color:var(--ink);font-weight:700}
+  ul.tools{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:12px}
+  a.tool{
+    display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:inherit;
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:16px;box-shadow:var(--shadow);
+    transition:transform .16s ease, border-color .16s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  a.tool:active{transform:scale(.985)}
+  a.tool:focus-visible{outline:2px solid var(--indigo);outline-offset:3px}
+  .ico{
+    flex:0 0 auto;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+    font-size:22px;line-height:1;
+  }
+  .t-teal{background:var(--teal-soft)}
+  .t-indigo{background:var(--indigo-soft)}
+  .t-rose{background:var(--rose-soft)}
+  .body{flex:1 1 auto;min-width:0}
+  .title{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .title h2{font-size:16.5px;margin:0;letter-spacing:-.01em}
+  .desc{margin:5px 0 0;font-size:13.5px;color:var(--ink-soft)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{font-size:11.5px;font-weight:600;color:var(--muted);background:var(--chip);border-radius:8px;padding:3px 8px}
+  .arrow{flex:0 0 auto;align-self:center;color:var(--muted);font-size:18px;line-height:1;margin-left:2px}
+  footer{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+  footer p{margin:0 0 6px}
+  .lock{font-weight:700;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">🔒 서버 전송 없음 · 기기 안에서 처리</span>
+    <h1>포켓 툴</h1>
+    <p class="sub">계약서·신분증 사본도 외부 사이트에 올리지 않고, <b>폰 안에서만</b> 변환·압축·리사이즈하세요. 설치 없이 링크로 바로 열립니다.</p>
+  </header>
+
+  <ul class="tools">
+    <li>
+      <a class="tool" href="./pdf-image/">
+        <span class="ico t-teal" aria-hidden="true">📄</span>
+        <span class="body">
+          <span class="title"><h2>PDF ↔ 이미지</h2></span>
+          <span class="desc">PDF를 페이지별 PNG·JPG로 풀거나, 사진 여러 장을 PDF 1개로 묶기</span>
+          <span class="chips"><span class="chip">페이지별 저장</span><span class="chip">2x 화질</span><span class="chip">ZIP 일괄</span></span>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
+    </li>
+    <li>
+      <a class="tool" href="./image-compress/">
+        <span class="ico t-indigo" aria-hidden="true">🗜️</span>
+        <span class="body">
+          <span class="title"><h2>이미지 압축 · 포맷 변환</h2></span>
+          <span class="desc">여러 장 한 번에 용량 줄이고 JPG·PNG·WebP로 변환</span>
+          <span class="chips"><span class="chip">화질 40~100%</span><span class="chip">최대 크기 지정</span><span class="chip">용량 비교</span></span>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
+    </li>
+    <li>
+      <a class="tool" href="./ratio-collage/">
+        <span class="ico t-rose" aria-hidden="true">🖼️</span>
+        <span class="body">
+          <span class="title"><h2>비율 리사이즈 &amp; 콜라쥬</h2></span>
+          <span class="desc">1:1 · 4:5 · 16:9에 맞춰 안 잘리게, 남는 여백은 흰색·블러로</span>
+          <span class="chips"><span class="chip">SNS 비율</span><span class="chip">여백 채우기</span><span class="chip">2~9장 콜라쥬</span></span>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
+    </li>
+  </ul>
+
+  <footer>
+    <p><span class="lock">🔒 업로드한 파일은 어디로도 전송되지 않습니다.</span> 변환은 브라우저 안에서만 이루어지고, 창을 닫으면 사라집니다.</p>
+    <p>홈 화면에 추가하면 앱처럼 전체화면으로 쓸 수 있어요.</p>
+  </footer>
+</div>
+</body>
+</html>
