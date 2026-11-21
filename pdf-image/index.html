@@ -6,6 +6,13 @@
 <meta name="theme-color" content="#0e7c70">
 <meta name="description" content="PDF를 페이지별 이미지로, 사진 여러 장을 PDF 하나로. 모든 변환은 브라우저(기기) 안에서만 처리되며 서버로 전송되지 않습니다.">
 <title>PDF ↔ 이미지 변환기 · 기기 안에서만</title>
+<link rel="manifest" href="/pocket-tools/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/pocket-tools/icon-192.png">
+<link rel="apple-touch-icon" href="/pocket-tools/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="포켓 툴">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e7c70'/%3E%3Ctext x='50' y='50' font-size='58' text-anchor='middle' dominant-baseline='central'%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
 <style>
   :root {
@@ -1278,6 +1285,13 @@
     version: "1.0.0"
   };
 })();
+</script>
+<script>
+/* 서비스 워커 등록 — 홈에서 앱으로 설치한 뒤에도 같은 범위(/pocket-tools/)로 열린다 */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/pocket-tools/sw.js', { scope: '/pocket-tools/' })
+    .catch(function (err) { console.warn('[pocket-tools] serviceWorker 등록 실패', err); });
+}
 </script>
 </body>
 </html>

@@ -8,6 +8,13 @@
 <meta name="theme-color" content="#0e1014" media="(prefers-color-scheme: dark)" />
 <meta name="description" content="사진을 원하는 비율로 자르지 않고 리사이즈하고 콜라쥬까지 만드는 앱. 모든 처리는 브라우저(기기) 안에서만 이루어지며 외부 서버로 전송되지 않습니다." />
 <title>비율 리사이즈 · 콜라쥬</title>
+<link rel="manifest" href="/pocket-tools/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="192x192" href="/pocket-tools/icon-192.png" />
+<link rel="apple-touch-icon" href="/pocket-tools/icon-192.png" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="포켓 툴" />
 <style>
   :root{
     --bg:#f4f5f7; --card:#ffffff; --card-2:#f8f9fb;
@@ -1536,6 +1543,13 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+</script>
+<script>
+/* 서비스 워커 등록 — 홈에서 앱으로 설치한 뒤에도 같은 범위(/pocket-tools/)로 열린다 */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/pocket-tools/sw.js', { scope: '/pocket-tools/' })
+    .catch(function (err) { console.warn('[pocket-tools] serviceWorker 등록 실패', err); });
+}
 </script>
 </body>
 </html>

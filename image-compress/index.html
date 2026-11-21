@@ -7,6 +7,13 @@
 <meta name="theme-color" content="#f4f5f9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)" />
 <title>이미지 압축 · 변환 — 기기 안에서만</title>
+<link rel="manifest" href="/pocket-tools/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="192x192" href="/pocket-tools/icon-192.png" />
+<link rel="apple-touch-icon" href="/pocket-tools/icon-192.png" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="포켓 툴" />
 <meta name="description" content="사진 여러 장을 한 번에 압축하고 JPG·WebP·PNG로 변환하세요. 모든 처리는 브라우저 안에서만 이뤄지고 서버로 전송되지 않습니다." />
 <meta property="og:title" content="이미지 압축 · 변환" />
 <meta property="og:description" content="여러 장 한 번에, 화질은 지키고 용량은 줄이세요. 100% 기기 안에서 처리." />
@@ -1649,6 +1656,13 @@
     init();
   }
 })();
+</script>
+<script>
+/* 서비스 워커 등록 — 홈에서 앱으로 설치한 뒤에도 같은 범위(/pocket-tools/)로 열린다 */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/pocket-tools/sw.js', { scope: '/pocket-tools/' })
+    .catch(function (err) { console.warn('[pocket-tools] serviceWorker 등록 실패', err); });
+}
 </script>
 </body>
 </html>

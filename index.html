@@ -8,6 +8,13 @@
 <meta name="theme-color" content="#0e1014" media="(prefers-color-scheme: dark)" />
 <meta name="description" content="PDF↔이미지 변환, 이미지 압축·포맷 변환, 비율 리사이즈·콜라쥬 — 모두 기기 안에서만 처리하는 미니 도구 3종." />
 <title>포켓 툴 · 폰에서 바로 쓰는 미니 도구 3종</title>
+<link rel="manifest" href="/pocket-tools/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="192x192" href="/pocket-tools/icon-192.png" />
+<link rel="apple-touch-icon" href="/pocket-tools/icon-192.png" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="포켓 툴" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230e1014'/%3E%3Ctext x='50' y='54' font-size='52' text-anchor='middle' dominant-baseline='central'%3E%F0%9F%A7%B0%3C/text%3E%3C/svg%3E" />
 <style>
   :root{
@@ -74,6 +81,23 @@
   footer{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
   footer p{margin:0 0 6px}
   .lock{font-weight:700;color:var(--ink-soft)}
+
+  /* 설치 배너 */
+  .install{
+    display:flex;gap:13px;align-items:center;width:100%;margin:18px 0 0;
+    background:linear-gradient(135deg,#4f46e5 0%,#6d28d9 60%,#7c3aed 100%);
+    color:#fff;border:0;border-radius:18px;padding:14px 16px;text-align:left;
+    font:inherit;cursor:pointer;box-shadow:0 12px 26px -16px rgba(79,70,229,.95);
+    -webkit-tap-highlight-color:transparent;transition:transform .16s ease;
+  }
+  .install[hidden]{display:none}
+  .install:active{transform:scale(.985)}
+  .install:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .install .appicon{flex:0 0 auto;width:44px;height:44px;border-radius:12px;box-shadow:0 6px 14px rgba(0,0,0,.28)}
+  .install .body{flex:1 1 auto;min-width:0}
+  .install strong{display:block;font-size:15px;letter-spacing:-.01em}
+  .install .desc{display:block;margin-top:3px;font-size:12.5px;color:rgba(255,255,255,.88)}
+  .install .arrow{flex:0 0 auto;color:rgba(255,255,255,.92);font-size:18px;line-height:1}
 </style>
 </head>
 <body>
@@ -83,6 +107,15 @@
     <h1>포켓 툴</h1>
     <p class="sub">계약서·신분증 사본도 외부 사이트에 올리지 않고, <b>폰 안에서만</b> 변환·압축·리사이즈하세요. 설치 없이 링크로 바로 열립니다.</p>
   </header>
+
+  <button class="install" id="installBtn" type="button" hidden>
+    <img class="appicon" src="/pocket-tools/icon-192.png" alt="" width="44" height="44" />
+    <span class="body">
+      <strong>📲 폰에 앱으로 설치하기</strong>
+      <span class="desc">홈 화면 아이콘 · 주소창 없이 전체화면</span>
+    </span>
+    <span class="arrow" aria-hidden="true">›</span>
+  </button>
 
   <ul class="tools">
     <li>
@@ -122,8 +155,51 @@
 
   <footer>
     <p><span class="lock">🔒 업로드한 파일은 어디로도 전송되지 않습니다.</span> 변환은 브라우저 안에서만 이루어지고, 창을 닫으면 사라집니다.</p>
-    <p>홈 화면에 추가하면 앱처럼 전체화면으로 쓸 수 있어요.</p>
+    <p>위의 <b>폰에 앱으로 설치하기</b>를 누르면 홈 화면에 아이콘이 생기고, 주소창 없이 앱처럼 열립니다.</p>
   </footer>
 </div>
+<script>
+(function () {
+  // 1) 서비스 워커 등록 — 안드로이드 크롬 '앱 설치' 조건
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/pocket-tools/sw.js', { scope: '/pocket-tools/' })
+      .catch(function (err) { console.warn('[pocket-tools] serviceWorker 등록 실패', err); });
+  }
+
+  // 2) 설치 버튼 — beforeinstallprompt 가 올 때만 보이고, 설치됐거나 지원 안 하면 숨김
+  var btn = document.getElementById('installBtn');
+  var deferred = null;
+  function isStandalone() {
+    var mq = window.matchMedia;
+    return !!((mq && mq('(display-mode: standalone)').matches) ||
+              (mq && mq('(display-mode: minimal-ui)').matches) ||
+              (mq && mq('(display-mode: fullscreen)').matches) ||
+              window.navigator.standalone === true);
+  }
+  if (btn && isStandalone()) btn.hidden = true;
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    if (btn && !isStandalone()) btn.hidden = false;
+  });
+
+  if (btn) {
+    btn.addEventListener('click', async function () {
+      if (!deferred) { btn.hidden = true; return; }
+      var e = deferred;
+      deferred = null;
+      e.prompt();
+      try { await e.userChoice; } catch (err) { /* 사용자가 닫아도 조용히 */ }
+      btn.hidden = true;
+    });
+  }
+
+  window.addEventListener('appinstalled', function () {
+    deferred = null;
+    if (btn) btn.hidden = true;
+  });
+})();
+</script>
 </body>
 </html>
