@@ -502,12 +502,13 @@
     [/business|economic|finance|psycholog|philosoph|histor|science|social|politic|self-help|education|language|reference|technolog|comput/i, 'nonfiction']
   ];
 
-  function classify(title, subjects, desc) {
+  function classify(title, subjects, desc, subtitle) {
     var subj = (subjects || []).join(' ');
     for (var s = 0; s < SUBJECT_MAP.length; s++) {
       if (subj && SUBJECT_MAP[s][0].test(subj)) return SUBJECT_MAP[s][1];
     }
-    var text = (String(title || '') + ' ' + String(title || '') + ' ' + String(desc || '')).toLowerCase().replace(/\s+/g, '');
+    var t = String(title || '');
+    var text = (t + ' ' + t + ' ' + String(subtitle || '') + ' ' + String(desc || '')).toLowerCase().replace(/\s+/g, '');
     var score = {}, best = 'etc', bestN = 0;
     for (var i = 0; i < KW_LIST.length; i++) {
       var kw = KW_LIST[i].k;
@@ -860,7 +861,7 @@
       cover: links.thumbnail || links.smallThumbnail || '',
       isbn: isbn,
       link: v.infoLink || v.canonicalVolumeLink || '',
-      cat: classify(v.title, v.categories || [], v.description || '')
+      cat: classify(v.title, v.categories || [], v.description || '', v.subtitle)
     };
   }
 
@@ -895,7 +896,7 @@
       cover: thumb,
       isbn: isbn,
       link: info ? info.replace(/^http:\/\//, 'https://') : '',
-      cat: classify(title, subjects, desc)
+      cat: classify(title, subjects, desc, subtitle)
     };
   }
 
@@ -972,6 +973,12 @@
     var found = [];
     var sources = [];
 
+    /* Open Library는 구글 결과의 분류·소개글을 보강하는 용도로 동시에 물어본다 */
+    var olPromise = fromOpenLibrary(q).catch(function (e) {
+      console.warn('[books] Open Library 실패', e && e.message);
+      return [];
+    });
+
     /* 1) Google Books API v1 */
     try {
       var data = await fetchJSON('https://www.googleapis.com/books/v1/volumes?q=' +
@@ -1007,21 +1014,45 @@
       }
     }
 
-    /* 3) Open Library (보조) */
-    if (found.length < 3) {
-      try {
-        var ol = await fromOpenLibrary(q);
-        found = found.concat(ol);
-        if (ol.length) sources.push('Open Library');
-      } catch (e) {
-        console.warn('[books] Open Library 실패', e && e.message);
-      }
+    /* 3) Open Library 결과 합치기 — 같은 책이면 분류·소개글만 보강 */
+    var ol = await olPromise;
+    var byTitle = {};
+    ol.forEach(function (b) {
+      var k = normKey(b.title);
+      if (k && !byTitle[k]) byTitle[k] = b;
+    });
+
+    if (found.length) {
+      found.forEach(function (b) {
+        var o = byTitle[normKey(b.title)];
+        if (!o) return;
+        if (!b.subjects || !b.subjects.length) b.subjects = o.subjects || [];
+        if (!b.desc && o.desc) b.desc = o.desc;
+        if (!b.cover && o.cover) b.cover = o.cover;
+        if (!b.year && o.year) b.year = o.year;
+        b.cat = classify(b.title, b.subjects, b.desc, b.subtitle);
+      });
+      if (ol.length) sources.push('Open Library');
+    } else if (ol.length) {
+      found = ol;
+      sources.push('Open Library');
     }
 
     found = found.filter(function (b) { return b.title; });
+    found = mergeEditions(found);
     found.forEach(function (b) { b.score = scoreBook(b, q); });
-    found.sort(function (a, b) { return b.score - a.score || (b.desc ? 1 : 0) - (a.desc ? 1 : 0); });
-    found = mergeEditions(found).slice(0, 10);
+    found.sort(function (a, b) {
+      return b.score - a.score || (b.desc ? 1 : 0) - (a.desc ? 1 : 0);
+    });
+
+    /* 제목과 너무 동떨어진 결과(책 본문에서 단어만 스친 경우)는 후보에서 빼기 */
+    if (found.length > 1 && found[0].score >= 0.6) {
+      var cutoff = Math.max(0.55, found[0].score - 0.25);
+      var kept = found.filter(function (b) { return b.score >= cutoff; });
+      if (kept.length) found = kept;
+    }
+
+    found = found.slice(0, 8);
     return { list: found, sources: sources };
   }
 
