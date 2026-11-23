@@ -1040,7 +1040,10 @@
 
     found = found.filter(function (b) { return b.title; });
     found = mergeEditions(found);
-    found.forEach(function (b) { b.score = scoreBook(b, q); });
+    found.forEach(function (b) {
+      b.cat = classify(b.title, b.subjects, b.desc, b.subtitle);
+      b.score = scoreBook(b, q);
+    });
     found.sort(function (a, b) {
       return b.score - a.score || (b.desc ? 1 : 0) - (a.desc ? 1 : 0);
     });
