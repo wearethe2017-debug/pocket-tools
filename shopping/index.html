@@ -216,6 +216,82 @@
   footer p{margin:0 0 6px}
   footer b{color:var(--ink-soft);font-weight:800}
 
+  /* ---------- 태그·메모 ---------- */
+  .tagchips-head{
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+    margin:13px 1px 6px;font-size:11.5px;font-weight:800;color:var(--muted);
+  }
+  .tagchips-head em{font-style:normal;font-weight:700;opacity:.8}
+  .tagchips{display:flex;flex-wrap:wrap;gap:6px}
+  .tagchip{
+    min-height:30px;padding:3px 10px;border-radius:999px;
+    border:1px dashed var(--line);background:var(--card);color:var(--ink-soft);
+    font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  }
+  .tagchip:active{opacity:.7}
+  .tagchip.is-on{border-style:solid;border-color:var(--indigo);background:var(--indigo-soft);color:var(--indigo)}
+
+  .tagbar{
+    position:sticky;top:0;z-index:20;display:grid;gap:7px;
+    margin:14px -4px 0;padding:8px 4px 7px;background:var(--bg);
+  }
+  .tagbar-scroll{display:flex;gap:6px;overflow-x:auto;padding:1px 0 3px;scrollbar-width:none}
+  .tagbar-scroll::-webkit-scrollbar{display:none}
+  .fchip{
+    flex:0 0 auto;min-height:32px;padding:4px 11px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink-soft);
+    font-size:12.5px;font-weight:800;white-space:nowrap;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .fchip .fc-n{margin-left:4px;color:var(--muted);font-weight:800;font-variant-numeric:tabular-nums}
+  .fchip.is-on{background:var(--indigo);border-color:transparent;color:#fff}
+  .fchip.is-on .fc-n{color:rgba(255,255,255,.78)}
+  .seg{
+    display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;
+    border-radius:12px;background:var(--chip);border:1px solid var(--line);
+  }
+  .seg button{
+    min-height:32px;border:0;border-radius:9px;background:transparent;
+    color:var(--ink-soft);font-size:12.5px;font-weight:800;cursor:pointer;
+  }
+  .seg button.is-on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(16,20,28,.1)}
+
+  .tg{
+    min-height:24px;padding:1px 8px;border-radius:999px;
+    border:1px solid rgba(99,102,241,.35);background:var(--indigo-soft);color:var(--indigo);
+    font-size:11.5px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  }
+  .tg:active{opacity:.7}
+  .tg-edit{
+    min-height:24px;padding:1px 8px;border-radius:999px;border:1px dashed var(--line);
+    background:transparent;color:var(--muted);font-size:11.5px;font-weight:800;cursor:pointer;
+  }
+  .tg-edit:active{opacity:.6}
+  .item-memo{
+    margin-top:6px;padding:1px 0 1px 8px;border-left:2px solid var(--line);
+    font-size:12px;line-height:1.45;color:var(--ink-soft);font-weight:700;
+    word-break:keep-all;overflow-wrap:anywhere;
+  }
+  .cat-tag{--c:var(--indigo);--cs:var(--indigo-soft)}
+  .cat-none{--c:var(--muted);--cs:var(--chip)}
+
+  .tag-edit{margin-top:2px}
+  .te-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px;min-height:26px}
+  .te-chips .tg{padding:4px 10px;font-size:12px}
+  .te-empty{font-size:12px;font-weight:700;color:var(--muted)}
+  .te-label{display:block;font-size:12px;font-weight:800;color:var(--ink-soft);margin:14px 0 6px}
+  .te-row{display:flex;gap:6px}
+  .te-input{
+    flex:1 1 auto;min-width:0;width:100%;min-height:44px;padding:0 12px;
+    border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);
+    font:inherit;font-size:14px;
+  }
+  .te-input::placeholder{color:var(--muted)}
+  .te-input:focus{outline:2px solid var(--indigo);outline-offset:1px;border-color:transparent}
+  .te-row .btn{flex:0 0 auto;min-height:44px;padding:0 14px}
+  .te-sug{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .te-hint{margin-top:8px;font-size:11.5px;line-height:1.5;color:var(--muted);font-weight:700}
+
   /* ---------- 바텀시트 ---------- */
   .sheet-wrap{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center}
   .sheet-backdrop{position:absolute;inset:0;background:rgba(8,10,14,.5)}
@@ -295,16 +371,18 @@
 
   <section class="card">
     <label class="field-label" for="bulkInput">한 번에 입력</label>
-    <textarea id="bulkInput" rows="4" placeholder="삼겹살 600g, 양배추 1개, 대파 1단&#10;우유 2L / 계란 30구 / 두부 2팩&#10;휴지 2팩, 키친타올 3롤" aria-describedby="bulkHint"></textarea>
+    <textarea id="bulkInput" rows="4" placeholder="삼겹살 600g, 양배추 1개, 대파 1단&#10;본가: 휴지 2팩, 키친타올 3롤&#10;계란 30구 #천안" aria-describedby="bulkHint"></textarea>
     <div class="row">
       <button class="btn primary" id="tidyBtn" type="button">착착 정리하기</button>
       <button class="btn ghost" id="clearInputBtn" type="button">지우기</button>
     </div>
+    <div class="tagchips-head">빠른 태그 <em>담을 때 함께 붙어요 · 한 번 더 누르면 해제</em></div>
+    <div class="tagchips" id="quickTagChips" role="group" aria-label="빠른 태그"></div>
     <div class="quick">
-      <input id="quickInput" type="text" placeholder="하나만 빠르게 (예: 우유 2L)" autocomplete="off" enterkeyhint="done" aria-label="품목 하나 빠르게 추가" />
+      <input id="quickInput" type="text" placeholder="하나만 빠르게 (예: 우유 2L #천안)" autocomplete="off" enterkeyhint="done" aria-label="품목 하나 빠르게 추가" />
       <button class="btn ghost" id="quickBtn" type="button">추가</button>
     </div>
-    <p class="hint" id="bulkHint">줄바꿈 · 쉼표(<b>,</b>) · 슬래시(<b>/</b>)로 나눠 한 번에 넣어도 돼요. <b>600g · 2개 · 30구 · 2L · 3봉</b> 같은 수량은 자동으로 떼어 냅니다.</p>
+    <p class="hint" id="bulkHint">줄바꿈 · 쉼표(<b>,</b>) · 슬래시(<b>/</b>)로 나눠 넣어도 돼요. 줄 앞에 <b>본가:</b> 처럼 태그를 붙이거나 품목 뒤에 <b>#천안</b>을 적으면 태그로 묶여요. <b>600g · 2개 · 30구 · 2L · 3봉</b> 같은 수량은 자동으로 떼어 냅니다.</p>
   </section>
 
   <div class="summary">
@@ -321,6 +399,14 @@
   <div class="actions">
     <button class="btn ghost" id="copyBtn" type="button">📋 목록 복사</button>
     <button class="btn ghost" id="shareBtn" type="button">🔗 공유 링크 복사</button>
+  </div>
+
+  <div class="tagbar" id="tagBar" hidden>
+    <div class="tagbar-scroll" id="tagFilter" role="group" aria-label="태그 필터"></div>
+    <div class="seg" id="groupSeg" role="group" aria-label="보기 방식">
+      <button type="button" data-group="cat">카테고리별</button>
+      <button type="button" data-group="tag">태그별</button>
+    </div>
   </div>
 
   <div class="list" id="listRoot" aria-live="polite"></div>
@@ -354,6 +440,7 @@
   'use strict';
 
   var KEY = 'pocket_tools_shopping_v1';
+  var DEFAULT_TAGS = ['본가', '천안', '코스트코', '다이소'];
 
   /* ============================================================
      카테고리 정의
@@ -435,13 +522,17 @@
     return fmtNum(parseFloat(num)) + normUnit(unit);
   }
 
-  function parseLine(raw) {
+  function parseLine(raw, extraTags) {
     var s = String(raw || '')
       .replace(/^(?:\s*[-•·*※]+|\s*\d+[.)])+/, '')
       .replace(/[()[\]{}]/g, ' ')
       .replace(/\u3000/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+    if (!s) return null;
+
+    var inl = extractTags(s);
+    s = inl.text.replace(/\s+/g, ' ').trim();
     if (!s) return null;
 
     var qtys = [];
@@ -465,7 +556,13 @@
     rest = rest.replace(/^[\s,]+|[\s,]+$/g, '').trim();
     if (!rest) { rest = s; qtys = []; }
 
-    return { name: rest, qty: qtys.join(' '), cat: classify(rest) };
+    return {
+      name: rest,
+      qty: qtys.join(' '),
+      cat: classify(rest),
+      tags: uniqTags((extraTags || []).concat(inl.tags)),
+      memo: ''
+    };
   }
 
   function splitQty(q) {
@@ -483,9 +580,117 @@
   }
 
   /* ============================================================
+     태그 유틸
+     ============================================================ */
+  function normTag(t) {
+    return String(t == null ? '' : t).replace(/^#+/, '').replace(/\s+/g, ' ').trim().slice(0, 20);
+  }
+  function tagKey(t) { return normTag(t).toLowerCase(); }
+  function uniqTags(list) {
+    var seen = {}, out = [];
+    (list || []).forEach(function (t) {
+      var n = normTag(t);
+      if (!n) return;
+      var k = n.toLowerCase();
+      if (seen[k]) return;
+      seen[k] = 1;
+      out.push(n);
+    });
+    return out;
+  }
+  function hasTag(list, t) {
+    var k = tagKey(t);
+    return (list || []).some(function (x) { return tagKey(x) === k; });
+  }
+  /* 품목명과 태그가 모두 같을 때만 같은 품목으로 본다 */
+  function sameTags(a, b) {
+    var A = uniqTags(a).map(tagKey).sort().join('|');
+    var B = uniqTags(b).map(tagKey).sort().join('|');
+    return A === B;
+  }
+  function availableTags(src) {
+    var seen = {}, out = [];
+    (src || []).forEach(function (it) {
+      (it.tags || []).forEach(function (t) {
+        var n = normTag(t), k = n.toLowerCase();
+        if (!k || seen[k]) return;
+        seen[k] = 1;
+        out.push(n);
+      });
+    });
+    return out;
+  }
+  var INLINE_TAG_RE = /(^|[\s,，、;；\/|])#([^\s#.,，、;；\/|]+)/g;
+  function extractTags(s) {
+    var tags = [];
+    var text = String(s || '').replace(INLINE_TAG_RE, function (m, pre, tag) {
+      var n = normTag(tag);
+      if (!n) return m;
+      tags.push(n);
+      return pre;
+    });
+    return { text: text, tags: uniqTags(tags) };
+  }
+
+  /* 줄 단위 입력 파싱 — 섹션 헤더(본가: / [본가])와 인라인 #태그를 함께 처리 */
+  function splitLineItems(line) {
+    return String(line || '').split(/[,，、;；\/|]+/);
+  }
+  var HEADER_BRACKET_RE = /^\[([^\]]+)\]\s*(.*)$/;
+  var HEADER_PREFIX_RE = /^([^\s:#\[\]]{1,14})\s*:\s*(.*)$/;
+
+  function parseBulk(raw) {
+    var out = [];
+    var section = [];
+    String(raw || '').split(/\r?\n/).forEach(function (line) {
+      var t = line.trim();
+      if (!t) return;
+
+      // [본가]  또는  [본가] 휴지, 키친타올
+      var br = HEADER_BRACKET_RE.exec(t);
+      if (br) {
+        var btags = uniqTags(br[1].split(/[,，、;；\/|\s]+/));
+        var brest = br[2].trim();
+        if (!brest) { section = btags; return; }
+        splitLineItems(brest).forEach(function (tok) {
+          var p = parseLine(tok, btags);
+          if (p) out.push(p);
+        });
+        return;
+      }
+
+      // 본가: 휴지, 키친타올   /   본가:   (헤더)
+      var hd = HEADER_PREFIX_RE.exec(t);
+      if (hd && !/^\d+$/.test(hd[1])) {
+        var label = normTag(hd[1]);
+        var rest = hd[2].trim();
+        if (!rest) { section = label ? [label] : []; return; }
+        splitLineItems(rest).forEach(function (tok) {
+          var p = parseLine(tok, label ? [label] : []);
+          if (p) out.push(p);
+        });
+        return;
+      }
+
+      // #본가 만 있는 줄 → 다음 헤더 전까지 적용
+      if (/^#\S+(\s+#\S+)*$/.test(t)) {
+        section = extractTags(t).tags;
+        return;
+      }
+
+      splitLineItems(t).forEach(function (tok) {
+        var p = parseLine(tok, section);
+        if (p) out.push(p);
+      });
+    });
+    return out;
+  }
+
+  /* ============================================================
      상태
      ============================================================ */
-  var state = { items: [], view: 'mine', shared: null, editing: null, lastRemoved: null };
+  var state = { items: [], view: 'mine', shared: null, editing: null, lastRemoved: null, filter: 'all', group: 'cat' };
+  var quickTags = [];
   var seq = Date.now();
 
   var $ = function (sel) { return document.querySelector(sel); };
@@ -497,6 +702,8 @@
   var purgeBtn = $('#purgeBtn');
   var sharedBar = $('#sharedBar'), sbCount = $('#sbCount');
   var dlg = $('#dlg'), dlgTitle = $('#dlgTitle'), dlgBody = $('#dlgBody'), dlgActions = $('#dlgActions');
+  var tagBar = $('#tagBar'), tagFilter = $('#tagFilter'), groupSeg = $('#groupSeg');
+  var quickTagChips = $('#quickTagChips');
   var toastEl = $('#toast');
 
   function current() { return state.view === 'shared' ? (state.shared || []) : state.items; }
@@ -507,10 +714,14 @@
   function save() {
     try {
       localStorage.setItem(KEY, JSON.stringify({
-        v: 1,
+        v: 2,
         updatedAt: Date.now(),
+        group: state.group === 'tag' ? 'tag' : 'cat',
         items: state.items.map(function (it) {
-          return { id: it.id, name: it.name, qty: it.qty || '', cat: it.cat, done: !!it.done, at: it.at };
+          return {
+            id: it.id, name: it.name, qty: it.qty || '', cat: it.cat, done: !!it.done, at: it.at,
+            tags: uniqTags(it.tags), memo: String(it.memo || '')
+          };
         })
       }));
     } catch (e) {
@@ -518,26 +729,31 @@
     }
   }
 
+  function emptyState() { return { items: [], group: 'cat' }; }
+
   function load() {
     try {
       var raw = localStorage.getItem(KEY);
-      if (!raw) return [];
+      if (!raw) return emptyState();
       var data = JSON.parse(raw);
       var arr = (data && data.items) || [];
-      if (!Array.isArray(arr)) return [];
-      return arr.filter(function (it) { return it && it.name; }).map(function (it, i) {
+      if (!Array.isArray(arr)) return emptyState();
+      var items = arr.filter(function (it) { return it && it.name; }).map(function (it, i) {
         return {
           id: it.id || uid(),
           name: String(it.name),
           qty: String(it.qty || ''),
           cat: CAT_INDEX[it.cat] != null ? it.cat : classify(it.name),
           done: !!it.done,
-          at: typeof it.at === 'number' ? it.at : i
+          at: typeof it.at === 'number' ? it.at : i,
+          tags: Array.isArray(it.tags) ? uniqTags(it.tags) : [],
+          memo: typeof it.memo === 'string' ? it.memo.slice(0, 80) : ''
         };
       });
+      return { items: items, group: (data && data.group === 'tag') ? 'tag' : 'cat' };
     } catch (e) {
       console.warn('[shopping] 불러오기 실패', e);
-      return [];
+      return emptyState();
     }
   }
 
@@ -623,12 +839,17 @@
      아이템 추가
      ============================================================ */
   function addParsed(p) {
+    var tags = uniqTags(p.tags || []);
+    var memo = String(p.memo || '').replace(/\s+/g, ' ').trim().slice(0, 80);
     var target = null;
     for (var i = 0; i < state.items.length; i++) {
-      if (normName(state.items[i].name) === normName(p.name)) { target = state.items[i]; break; }
+      if (normName(state.items[i].name) === normName(p.name) && sameTags(state.items[i].tags, tags)) {
+        target = state.items[i];
+        break;
+      }
     }
     if (!target) {
-      state.items.push({ id: uid(), name: p.name, qty: p.qty || '', cat: p.cat, done: false, at: ++seq });
+      state.items.push({ id: uid(), name: p.name, qty: p.qty || '', cat: p.cat, done: false, at: ++seq, tags: tags, memo: memo });
       return 'added';
     }
     var a = splitQty(target.qty), b = splitQty(p.qty);
@@ -637,13 +858,14 @@
     } else if (!target.qty && p.qty) {
       target.qty = p.qty;
     }
+    if (!target.memo && memo) target.memo = memo;
     if (target.done) target.done = false;   // 다시 사야 하니 미완료로
     return 'merged';
   }
 
   function addFromText(text) {
     if (!String(text || '').trim()) return false;
-    var p = parseLine(text);
+    var p = parseLine(text, quickTags);
     if (!p) return false;
     var r = addParsed(p);
     save();
@@ -655,22 +877,23 @@
     var raw = bulkInput.value;
     if (!raw.trim()) { toast('먼저 장 볼 품목을 적어 주세요.'); bulkInput.focus(); return; }
 
-    var tokens = raw.split(/[\n,，、;；\/|]+/);
-    var added = 0, merged = 0;
-    tokens.forEach(function (tok) {
-      var p = parseLine(tok);
-      if (!p) return;
-      if (addParsed(p) === 'added') added++; else merged++;
-    });
-    if (!added && !merged) {
+    var parsed = parseBulk(raw);
+    if (!parsed.length) {
       toast('품목을 찾지 못했어요. 한 줄에 하나씩 적어 보세요.');
       return;
     }
+    var added = 0, merged = 0;
+    parsed.forEach(function (p) {
+      p.tags = uniqTags((p.tags || []).concat(quickTags));
+      if (addParsed(p) === 'added') added++; else merged++;
+    });
     save();
     bulkInput.value = '';
     render();
     var msg = (added + merged) + '개 정리했어요';
     if (merged) msg += ' · 이미 있던 ' + merged + '개는 수량을 합쳤어요';
+    var used = availableTags(parsed.map(function (p) { return { tags: p.tags }; }));
+    if (used.length) msg += ' · #' + used.join(' #');
     toast(msg);
   }
 
@@ -684,8 +907,36 @@
     return e;
   }
 
+  function byOrder(a, b) {
+    return (a.done ? 1 : 0) - (b.done ? 1 : 0) || (a.at || 0) - (b.at || 0);
+  }
+  function primaryTag(it) { return normTag((it.tags || [])[0] || ''); }
+
+  /* 현재 목록을 보기 방식(카테고리별 / 태그별)에 따라 그룹으로 나눔 */
+  function groupItems(src) {
+    var groups = [];
+    if (state.group === 'tag') {
+      availableTags(src).forEach(function (t) {
+        var k = tagKey(t);
+        var list = src.filter(function (it) { return tagKey(primaryTag(it)) === k; });
+        if (!list.length) return;
+        groups.push({ kind: 'tag', label: '#' + t, items: list.slice().sort(byOrder) });
+      });
+      var none = src.filter(function (it) { return !primaryTag(it); });
+      if (none.length) groups.push({ kind: 'none', label: '태그 없음', items: none.slice().sort(byOrder) });
+      return groups;
+    }
+    CATS.forEach(function (cat) {
+      var list = src.filter(function (it) { return it.cat === cat.id; });
+      if (!list.length) return;
+      groups.push({ kind: 'cat', cat: cat, label: cat.label, items: list.slice().sort(byOrder) });
+    });
+    return groups;
+  }
+
   function itemEl(it, readOnly) {
     var cat = catOf(it.cat);
+    var tags = it.tags || [];
     var li = h('li', 'item' + (it.done ? ' is-done' : ''));
     li.dataset.id = it.id;
 
@@ -728,7 +979,25 @@
     if (readOnly) chip.disabled = true;
     meta.appendChild(chip);
 
+    tags.forEach(function (t) {
+      var tb = h('button', 'tg', '#' + t);
+      tb.type = 'button';
+      tb.dataset.act = 'tag';
+      tb.dataset.tag = t;
+      tb.setAttribute('aria-label', '#' + t + ' 태그만 보기');
+      meta.appendChild(tb);
+    });
+
+    if (!readOnly) {
+      var eb = h('button', 'tg-edit', (tags.length || it.memo) ? '✎ 메모·태그' : '＋ 메모·태그');
+      eb.type = 'button';
+      eb.dataset.act = 'edit';
+      eb.setAttribute('aria-label', it.name + ' 태그·메모 편집');
+      meta.appendChild(eb);
+    }
+
     main.appendChild(meta);
+    if (it.memo) main.appendChild(h('div', 'item-memo', it.memo));
     li.appendChild(main);
 
     var del = h('button', 'del', '×');
@@ -741,25 +1010,107 @@
     return li;
   }
 
-  function sectionEl(cat, list, readOnly) {
-    var sec = h('section', 'cat cat-' + cat.id);
-    var head = h('div', 'cat-head');
-    head.appendChild(h('span', 'ce', cat.emoji));
-    head.appendChild(h('h2', null, cat.label));
-    var left = list.filter(function (i) { return !i.done; }).length;
-    head.appendChild(h('span', 'n', left + ' / ' + list.length));
+  function sectionEl(group, readOnly) {
+    var sec, head, ce;
+    if (group.kind === 'cat') {
+      sec = h('section', 'cat cat-' + group.cat.id);
+      ce = group.cat.emoji;
+    } else {
+      sec = h('section', 'cat ' + (group.kind === 'none' ? 'cat-none' : 'cat-tag'));
+      ce = group.kind === 'none' ? '🏷' : '#';
+    }
+    head = h('div', 'cat-head');
+    head.appendChild(h('span', 'ce', ce));
+    head.appendChild(h('h2', null, group.label));
+    var left = group.items.filter(function (i) { return !i.done; }).length;
+    head.appendChild(h('span', 'n', left + ' / ' + group.items.length));
     sec.appendChild(head);
 
     var ul = document.createElement('ul');
-    list.forEach(function (it) { ul.appendChild(itemEl(it, readOnly)); });
+    group.items.forEach(function (it) { ul.appendChild(itemEl(it, readOnly)); });
     sec.appendChild(ul);
     return sec;
   }
 
+  function filtered(src) {
+    if (state.filter === 'all') return src;
+    if (state.filter === 'none') return src.filter(function (it) { return !(it.tags || []).length; });
+    var k = tagKey(state.filter);
+    return src.filter(function (it) {
+      return (it.tags || []).some(function (t) { return tagKey(t) === k; });
+    });
+  }
+
+  function chipEl(label, value, count, active) {
+    var b = h('button', 'fchip' + (active ? ' is-on' : ''));
+    b.type = 'button';
+    b.dataset.filter = value;
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    b.appendChild(document.createTextNode(label));
+    if (count != null) b.appendChild(h('span', 'fc-n', String(count)));
+    return b;
+  }
+
+  function renderTagBar(all) {
+    tagFilter.innerHTML = '';
+    if (!all.length) { tagBar.hidden = true; return; }
+    tagBar.hidden = false;
+
+    tagFilter.appendChild(chipEl('전체', 'all', all.length, state.filter === 'all'));
+    availableTags(all).forEach(function (t) {
+      var k = tagKey(t);
+      var n = all.filter(function (it) {
+        return (it.tags || []).some(function (x) { return tagKey(x) === k; });
+      }).length;
+      tagFilter.appendChild(chipEl('#' + t, 't:' + t, n, state.filter !== 'all' && state.filter !== 'none' && tagKey(state.filter) === k));
+    });
+    var noneN = all.filter(function (it) { return !(it.tags || []).length; }).length;
+    if (noneN) tagFilter.appendChild(chipEl('태그 없음', 'none', noneN, state.filter === 'none'));
+
+    var btns = groupSeg.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++) {
+      var on = btns[i].dataset.group === state.group;
+      btns[i].classList.toggle('is-on', on);
+      btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+  }
+
+  /* 입력창 아래 빠른 태그 칩 */
+  function renderQuickChips() {
+    var list = uniqTags(availableTags(state.items).concat(DEFAULT_TAGS));
+    quickTagChips.innerHTML = '';
+    list.forEach(function (t) {
+      var on = hasTag(quickTags, t);
+      var b = h('button', 'tagchip' + (on ? ' is-on' : ''), '#' + t);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.setAttribute('aria-label', '빠른 태그 #' + t + (on ? ' 해제' : ''));
+      b.addEventListener('click', function () {
+        if (hasTag(quickTags, t)) {
+          quickTags = quickTags.filter(function (x) { return tagKey(x) !== tagKey(t); });
+        } else {
+          quickTags = quickTags.concat([t]);
+        }
+        renderQuickChips();
+      });
+      quickTagChips.appendChild(b);
+    });
+  }
+
   function render() {
-    var src = current();
-    var total = src.length;
-    var done = src.filter(function (i) { return i.done; }).length;
+    var all = current();
+    var total = all.length;
+    var done = all.filter(function (i) { return i.done; }).length;
+
+    // 필터에 걸린 태그가 사라졌으면 전체로 되돌림
+    if (state.filter !== 'all') {
+      var valid = state.filter === 'none'
+        ? all.some(function (i) { return !(i.tags || []).length; })
+        : availableTags(all).some(function (t) { return tagKey(t) === tagKey(state.filter); });
+      if (!valid) state.filter = 'all';
+    }
+
+    var src = filtered(all);
 
     statAll.textContent = total;
     statLeft.textContent = total - done;
@@ -768,26 +1119,146 @@
     sharedBar.hidden = state.view !== 'shared';
     sbCount.textContent = (state.shared || []).length;
 
+    renderTagBar(all);
+    renderQuickChips();
+
     listRoot.innerHTML = '';
     listRoot.classList.toggle('is-ro', state.view === 'shared');
 
-    var any = false;
-    CATS.forEach(function (cat) {
-      var list = src.filter(function (i) { return i.cat === cat.id; })
-        .sort(function (a, b) {
-          return (a.done ? 1 : 0) - (b.done ? 1 : 0) || (a.at || 0) - (b.at || 0);
+    var groups = groupItems(src);
+    groups.forEach(function (g) { listRoot.appendChild(sectionEl(g, state.view === 'shared')); });
+
+    var nothing = !groups.length;
+    emptyBox.hidden = !nothing;
+    if (nothing) {
+      if (!total) {
+        emptyBox.querySelector('p').innerHTML = state.view === 'shared'
+          ? '공유받은 목록이 비어 있어요.'
+          : '아직 목록이 비어 있어요.<br>위에 장 볼 품목을 적고 <b>착착 정리하기</b>를 눌러 보세요.';
+      } else {
+        emptyBox.querySelector('p').innerHTML = '이 태그에 담긴 품목이 없어요.<br><b>전체</b>를 눌러 모두 보세요.';
+      }
+    }
+  }
+
+  /* ============================================================
+     태그·메모 편집 시트
+     ============================================================ */
+  function openEditSheet(id) {
+    var it = state.items.filter(function (i) { return i.id === id; })[0];
+    if (!it) return;
+
+    var draft = uniqTags(it.tags);
+    var box = h('div', 'tag-edit');
+
+    var chips = h('div', 'te-chips');
+    box.appendChild(chips);
+
+    function draw() {
+      chips.innerHTML = '';
+      if (!draft.length) {
+        chips.appendChild(h('span', 'te-empty', '아직 태그가 없어요.'));
+        return;
+      }
+      draft.forEach(function (t) {
+        var b = h('button', 'tg', '#' + t + ' ✕');
+        b.type = 'button';
+        b.setAttribute('aria-label', '#' + t + ' 태그 빼기');
+        b.addEventListener('click', function () {
+          draft = draft.filter(function (x) { return tagKey(x) !== tagKey(t); });
+          draw();
+          drawSug();
         });
-      if (!list.length) return;
-      any = true;
-      listRoot.appendChild(sectionEl(cat, list, state.view === 'shared'));
+        chips.appendChild(b);
+      });
+    }
+
+    var addLabel = h('label', 'te-label', '태그 추가');
+    var addRow = h('div', 'te-row');
+    var addInput = document.createElement('input');
+    addInput.className = 'te-input';
+    addInput.type = 'text';
+    addInput.placeholder = '예: 본가, 천안';
+    addInput.setAttribute('enterkeyhint', 'done');
+    addInput.setAttribute('aria-label', '태그 추가');
+    var addBtn = h('button', 'btn ghost', '추가');
+    addBtn.type = 'button';
+    addRow.appendChild(addInput);
+    addRow.appendChild(addBtn);
+
+    function addFromInput() {
+      var parts = String(addInput.value || '').split(/[\s,，、;；\/|]+/);
+      var added = false;
+      parts.forEach(function (p) {
+        var t = normTag(p);
+        if (!t || hasTag(draft, t)) return;
+        draft.push(t);
+        added = true;
+      });
+      addInput.value = '';
+      if (added) { draw(); drawSug(); }
+    }
+    addBtn.addEventListener('click', addFromInput);
+    addInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); addFromInput(); }
     });
 
-    emptyBox.hidden = any;
-    if (!any) {
-      emptyBox.querySelector('p').innerHTML = state.view === 'shared'
-        ? '공유받은 목록이 비어 있어요.'
-        : '아직 목록이 비어 있어요.<br>위에 장 볼 품목을 적고 <b>착착 정리하기</b>를 눌러 보세요.';
+    var sug = h('div', 'te-sug');
+    function drawSug() {
+      sug.innerHTML = '';
+      var pool = uniqTags(availableTags(state.items).concat(DEFAULT_TAGS))
+        .filter(function (t) { return !hasTag(draft, t); });
+      pool.slice(0, 8).forEach(function (t) {
+        var b = h('button', 'tagchip', '#' + t);
+        b.type = 'button';
+        b.setAttribute('aria-label', '#' + t + ' 태그 붙이기');
+        b.addEventListener('click', function () {
+          if (!hasTag(draft, t)) draft.push(t);
+          addInput.value = '';
+          draw();
+          drawSug();
+        });
+        sug.appendChild(b);
+      });
+      sug.hidden = !sug.children.length;
     }
+
+    var memoLabel = h('label', 'te-label', '한 줄 메모');
+    var memoInput = document.createElement('input');
+    memoInput.className = 'te-input';
+    memoInput.type = 'text';
+    memoInput.maxLength = 80;
+    memoInput.value = it.memo || '';
+    memoInput.placeholder = '예: 어머니꺼, 대용량';
+    memoInput.setAttribute('aria-label', '한 줄 메모');
+    memoInput.setAttribute('enterkeyhint', 'done');
+
+    draw();
+    drawSug();
+    box.appendChild(addLabel);
+    box.appendChild(addRow);
+    box.appendChild(sug);
+    box.appendChild(memoLabel);
+    box.appendChild(memoInput);
+    box.appendChild(h('p', 'te-hint', '태그는 여러 개 붙일 수 있어요. 첫 번째 태그를 기준으로 “태그별” 보기에서 묶입니다.'));
+
+    openDialog({
+      title: '태그·메모',
+      body: '“' + it.name + '”에 붙일 태그와 메모를 정해 주세요.',
+      content: box,
+      dismissible: false,
+      actions: [
+        { label: '저장', kind: 'primary', onPick: function () {
+            addFromInput();
+            it.tags = uniqTags(draft);
+            it.memo = String(memoInput.value || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+            save();
+            render();
+            toast((it.tags.length || it.memo) ? '“' + it.name + '” 태그·메모를 저장했어요' : '“' + it.name + '” 태그·메모를 지웠어요');
+          } },
+        { label: '취소' }
+      ]
+    });
   }
 
   /* ============================================================
@@ -817,21 +1288,44 @@
   /* ============================================================
      목록 텍스트 / 복사
      ============================================================ */
+  function tagSuffix(it) {
+    var tags = it.tags || [];
+    return tags.length ? '  ' + tags.map(function (t) { return '#' + t; }).join(' ') : '';
+  }
+
   function listToText() {
-    var src = current();
+    var all = current();
+    var src = filtered(all);
     var left = src.filter(function (i) { return !i.done; });
     var used = left.length ? left : src;
     var d = new Date();
     var lines = [];
-    lines.push('🛒 장 볼 목록 · ' + (d.getMonth() + 1) + '/' + d.getDate());
+
+    var title = '🛒 장 볼 목록 · ' + (d.getMonth() + 1) + '/' + d.getDate();
+    if (state.filter === 'none') title += ' · 태그 없음';
+    else if (state.filter !== 'all') title += ' · #' + state.filter;
+    lines.push(title);
     lines.push('남은 ' + left.length + '개 / 전체 ' + src.length + '개');
-    CATS.forEach(function (cat) {
-      var list = used.filter(function (i) { return i.cat === cat.id; });
-      if (!list.length) return;
+
+    var groups;
+    if (state.group === 'tag') {
+      groups = groupItems(used).map(function (g) {
+        return { label: g.kind === 'cat' ? g.cat.emoji + ' ' + g.cat.label
+          : (g.kind === 'none' ? '🏷 태그 없음' : '🏷 ' + g.label), items: g.items };
+      });
+    } else {
+      groups = CATS.map(function (c) {
+        return { label: c.emoji + ' ' + c.label, items: used.filter(function (i) { return i.cat === c.id; }) };
+      });
+    }
+
+    groups.forEach(function (g) {
+      if (!g.items.length) return;
       lines.push('');
-      lines.push(cat.emoji + ' ' + cat.label);
-      list.forEach(function (it) {
-        lines.push('- ' + it.name + (it.qty ? ' ' + it.qty : ''));
+      lines.push(g.label);
+      g.items.forEach(function (it) {
+        lines.push('- ' + it.name + (it.qty ? ' ' + it.qty : '') + tagSuffix(it));
+        if (it.memo) lines.push('   · ' + it.memo);
       });
     });
     return lines.join('\n');
@@ -882,10 +1376,13 @@
 
   async function encodeList(list) {
     var compact = {
-      v: 1,
+      v: 2,
       t: Date.now(),
       i: list.map(function (it) {
-        return [it.name, it.qty || '', CAT_INDEX[it.cat] != null ? CAT_INDEX[it.cat] : 5, it.done ? 1 : 0];
+        return [
+          it.name, it.qty || '', CAT_INDEX[it.cat] != null ? CAT_INDEX[it.cat] : 5, it.done ? 1 : 0,
+          uniqTags(it.tags), String(it.memo || '')
+        ];
       })
     };
     var bytes = new TextEncoder().encode(JSON.stringify(compact));
@@ -926,7 +1423,9 @@
         qty: String(row[1] || ''),
         cat: CATS[ci] ? CATS[ci].id : 'etc',
         done: !!row[3],
-        at: idx
+        at: idx,
+        tags: Array.isArray(row[4]) ? uniqTags(row[4]) : [],
+        memo: typeof row[5] === 'string' ? String(row[5]).slice(0, 80) : ''
       };
     }).filter(function (it) { return it.name; });
   }
@@ -982,7 +1481,10 @@
      ============================================================ */
   function applyOverwrite() {
     var next = (state.shared || []).map(function (it) {
-      return { id: uid(), name: it.name, qty: it.qty, cat: it.cat, done: it.done, at: ++seq };
+      return {
+        id: uid(), name: it.name, qty: it.qty, cat: it.cat, done: it.done, at: ++seq,
+        tags: uniqTags(it.tags), memo: String(it.memo || '')
+      };
     });
     state.items = next;
     state.shared = null;
@@ -1008,7 +1510,7 @@
     var shared = state.shared || [];
     var added = 0, merged = 0;
     shared.forEach(function (it) {
-      if (addParsed({ name: it.name, qty: it.qty, cat: it.cat }) === 'added') added++; else merged++;
+      if (addParsed({ name: it.name, qty: it.qty, cat: it.cat, tags: it.tags, memo: it.memo }) === 'added') added++; else merged++;
     });
     save();
     state.shared = null;
@@ -1106,6 +1608,28 @@
   });
   $('#shareBtn').addEventListener('click', shareList);
 
+  tagFilter.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-filter]') : null;
+    if (!b) return;
+    var v = b.dataset.filter;
+    if (v === 'all') state.filter = 'all';
+    else if (v === 'none') state.filter = 'none';
+    else if (v.indexOf('t:') === 0) {
+      var t = v.slice(2);
+      state.filter = (state.filter !== 'all' && state.filter !== 'none' && tagKey(state.filter) === tagKey(t)) ? 'all' : t;
+    }
+    render();
+  });
+
+  groupSeg.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-group]') : null;
+    if (!b) return;
+    if (state.group === b.dataset.group) return;
+    state.group = b.dataset.group;
+    save();
+    render();
+  });
+
   $('#sbAdd').addEventListener('click', applyAddShared);
   $('#sbMine').addEventListener('click', function () {
     state.view = 'mine';
@@ -1119,11 +1643,28 @@
     if (!btn) return;
     var act = btn.dataset.act;
     if (act === 'qty-input') return;
+
+    // 태그 칩: 그 태그만 보기 ↔ 해제
+    if (act === 'tag') {
+      var tg = btn.dataset.tag || '';
+      if (!tg) return;
+      var already = state.filter !== 'all' && state.filter !== 'none' && tagKey(state.filter) === tagKey(tg);
+      state.filter = already ? 'all' : tg;
+      render();
+      toast(already ? '전체 목록을 봐요' : '#' + state.filter + ' 태그만 보는 중');
+      return;
+    }
+
     var row = btn.closest('[data-id]');
     if (!row) return;
     var id = row.dataset.id;
     var it = state.items.filter(function (i) { return i.id === id; })[0];
     if (!it) return;
+
+    if (act === 'edit') {
+      openEditSheet(id);
+      return;
+    }
 
     if (act === 'toggle') {
       it.done = !it.done;
@@ -1197,7 +1738,9 @@
      시작
      ============================================================ */
   function init() {
-    state.items = load();
+    var loaded = load();
+    state.items = loaded.items;
+    state.group = loaded.group;
     render();
     handleShareParam();
   }
