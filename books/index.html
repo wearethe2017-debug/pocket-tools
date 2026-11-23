@@ -609,6 +609,14 @@
     var y = String(d || '').slice(0, 4);
     return /^\d{4}$/.test(y) ? y : '';
   }
+  /* 제목 정리 — 같은 괄호가 두 번 붙는 경우(„아몬드(창비 78)(창비 78)”)를 한 번으로 */
+  function tidyTitle(t) {
+    var s = String(t || '').replace(/\s+/g, ' ').trim();
+    var prev;
+    do { prev = s; s = s.replace(/(\([^()]{1,40}\))\1+/g, '$1'); } while (s !== prev);
+    return s;
+  }
+  function hasHangul(s) { return /[\uAC00-\uD7A3]/.test(String(s || '')); }
   function uid() { return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 
   /* ============================================================
@@ -851,7 +859,7 @@
       if (!isbn && x && x.identifier) isbn = x.identifier;
     });
     return {
-      title: String(v.title),
+      title: tidyTitle(v.title),
       subtitle: (v.subtitle && String(v.subtitle).length < 90) ? String(v.subtitle) : '',
       author: (v.authors || []).join(', '),
       publisher: v.publisher || '',
@@ -886,7 +894,7 @@
     var subjects = gdataOne(entry['dc$subject']);
     var desc = gdataOne(entry['dc$description'])[0] || '';
     return {
-      title: title,
+      title: tidyTitle(title),
       subtitle: subtitle,
       author: gdataOne(entry['dc$creator']).join(', '),
       publisher: gdataOne(entry['dc$publisher'])[0] || '',
@@ -950,6 +958,7 @@
       if (hit == null && !a && firstByTitle[t] != null) hit = firstByTitle[t];
       if (hit != null && out[hit]) {
         var cur = out[hit];
+        if (normKey(b.title) === normKey(cur.title) && b.title.length < cur.title.length) cur.title = b.title;
         if (!cur.cover && b.cover) cur.cover = b.cover;
         if (!cur.isbn && b.isbn) cur.isbn = b.isbn;
         if (!cur.desc && b.desc) cur.desc = b.desc;
@@ -1014,7 +1023,7 @@
       }
     }
 
-    /* 3) Open Library 결과 합치기 — 같은 책이면 분류·소개글만 보강 */
+    /* 3) Open Library 결과 준비 — 같은 책이면 분류·소개글만 보강 */
     var ol = await olPromise;
     var byTitle = {};
     ol.forEach(function (b) {
@@ -1022,25 +1031,25 @@
       if (k && !byTitle[k]) byTitle[k] = b;
     });
 
-    if (found.length) {
-      found.forEach(function (b) {
-        var o = byTitle[normKey(b.title)];
-        if (!o) return;
-        if (!b.subjects || !b.subjects.length) b.subjects = o.subjects || [];
-        if (!b.desc && o.desc) b.desc = o.desc;
-        if (!b.cover && o.cover) b.cover = o.cover;
-        if (!b.year && o.year) b.year = o.year;
-        b.cat = classify(b.title, b.subjects, b.desc, b.subtitle);
-      });
-      if (ol.length) sources.push('Open Library');
-    } else if (ol.length) {
-      found = ol;
+    if (!found.length && ol.length) {
+      found = ol.slice();
+      sources.push('Open Library');
+    } else if (found.length && ol.length) {
       sources.push('Open Library');
     }
 
     found = found.filter(function (b) { return b.title; });
     found = mergeEditions(found);
+
+    /* 구글 정보에 빠진 분류·소개글을 Open Library 것으로 채움 (구글 소개글이 우선) */
     found.forEach(function (b) {
+      var o = byTitle[normKey(b.title)];
+      if (o) {
+        if (!b.subjects || !b.subjects.length) b.subjects = o.subjects || [];
+        if (!b.desc && o.desc && hasHangul(o.desc)) b.desc = o.desc;
+        if (!b.cover && o.cover) b.cover = o.cover;
+        if (!b.year && o.year) b.year = o.year;
+      }
       b.cat = classify(b.title, b.subjects, b.desc, b.subtitle);
       b.score = scoreBook(b, q);
     });
@@ -1619,8 +1628,9 @@
 
       var best = list[0];
       var second = list[1];
-      var clear = best.score >= 0.9 && (!second || best.score - second.score >= 0.1);
-      if (list.length === 1 || clear) {
+      var gap = best.score - (second ? second.score : 0);
+      var clear = list.length === 1 || best.score >= 0.95 || (best.score >= 0.9 && gap >= 0.099);
+      if (clear) {
         showConfirm(best, list.slice(1), q);
       } else if (best.score >= 0.75 && list.length <= 2) {
         showConfirm(best, list.slice(1), q);
