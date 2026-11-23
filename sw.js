@@ -3,7 +3,7 @@
  *       네트워크 우선 + 실패 시 캐시 폴백(5개 페이지 미리 저장).
  * 원칙: 기기 안에서만 처리하는 도구이므로 업로드·변환 데이터는 다루지 않는다.
  */
-const VERSION = 'pocket-tools-v4';
+const VERSION = 'pocket-tools-v5';
 const SCOPE = '/pocket-tools/';
 const CORE = [
   SCOPE,

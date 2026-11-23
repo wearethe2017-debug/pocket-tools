@@ -309,11 +309,15 @@
       <div class="chips" id="ratioChips"></div>
 
       <div class="field" style="margin-top:16px">
-        <div class="lbl"><span>여백 채우기</span></div>
-        <div class="seg" id="fillSeg">
-          <button type="button" data-fill="white"><span class="sw sw-white" aria-hidden="true"></span>흰 여백</button>
-          <button type="button" data-fill="blur"><span class="sw sw-blur" aria-hidden="true"></span>블러 배경</button>
-          <button type="button" data-fill="black"><span class="sw sw-black" aria-hidden="true"></span>검정 여백</button>
+        <div class="lbl"><span>여백 색</span></div>
+        <div class="swatch-row" id="fillRow" style="flex-wrap:wrap">
+          <button type="button" class="swatch" data-fill="#ffffff"><span class="sw sw-white" aria-hidden="true"></span>흰색</button>
+          <button type="button" class="swatch" data-fill="#0b0b0c"><span class="sw sw-black" aria-hidden="true"></span>검정</button>
+          <button type="button" class="swatch" data-fill="#faf6ef"><span class="sw" style="background:#faf6ef" aria-hidden="true"></span>크림</button>
+          <button type="button" class="swatch" data-fill="#e5e7eb"><span class="sw" style="background:#e5e7eb" aria-hidden="true"></span>그레이</button>
+          <button type="button" class="swatch" data-fill="#fce7f3"><span class="sw" style="background:#fce7f3" aria-hidden="true"></span>핑크</button>
+          <button type="button" class="swatch" data-fill="#e0f2fe"><span class="sw" style="background:#e0f2fe" aria-hidden="true"></span>스카이</button>
+          <label class="swatch" id="customFillLabel">직접<input type="color" id="fillColor" value="#f3f4f6" aria-label="여백 색 직접 선택" hidden /><span id="fillColorChip" class="sw" style="background:#f3f4f6" aria-hidden="true"></span></label>
         </div>
       </div>
 
@@ -381,9 +385,13 @@
 
       <div class="field">
         <div class="lbl"><span>배경색 (간격·여백)</span></div>
-        <div class="swatch-row" id="bgRow">
+        <div class="swatch-row" id="bgRow" style="flex-wrap:wrap">
           <button type="button" class="swatch" data-bg="#ffffff"><span class="sw sw-white" aria-hidden="true"></span>흰색</button>
           <button type="button" class="swatch" data-bg="#0b0b0c"><span class="sw sw-black" aria-hidden="true"></span>검정</button>
+          <button type="button" class="swatch" data-bg="#faf6ef"><span class="sw" style="background:#faf6ef" aria-hidden="true"></span>크림</button>
+          <button type="button" class="swatch" data-bg="#e5e7eb"><span class="sw" style="background:#e5e7eb" aria-hidden="true"></span>그레이</button>
+          <button type="button" class="swatch" data-bg="#fce7f3"><span class="sw" style="background:#fce7f3" aria-hidden="true"></span>핑크</button>
+          <button type="button" class="swatch" data-bg="#e0f2fe"><span class="sw" style="background:#e0f2fe" aria-hidden="true"></span>스카이</button>
           <label class="swatch" id="customBgLabel">직접<input type="color" id="bgColor" value="#f3f4f6" aria-label="배경색 직접 선택" hidden /><span id="bgColorChip" class="sw" style="background:#f3f4f6" aria-hidden="true"></span></label>
         </div>
       </div>
@@ -495,7 +503,7 @@
   ];
   var AUTO_LAYOUT = { 1: 'single', 2: 'h2', 3: 't3', 4: 'g4', 5: 't5', 6: 'g6', 7: 'g7', 8: 'g8', 9: 'g9' };
 
-  var state = { ratio: '1:1', fill: 'white', padding: 0, format: 'jpeg', items: [] };
+  var state = { ratio: '1:1', fill: '#ffffff', customFill: false, padding: 0, format: 'jpeg', items: [] };
   var collage = {
     sources: [], layoutId: 'auto', ratio: '1:1',
     gap: 8, radius: 0, bg: '#ffffff', fit: 'cover', customBg: false
@@ -618,12 +626,8 @@
     var img = item.img;
     var iw = Math.max(1, img.width || 0), ih = Math.max(1, img.height || 0);
 
-    if (opts.fill === 'blur') {
-      drawBlurBackdrop(ctx, img, W, H);
-    } else {
-      ctx.fillStyle = (opts.fill === 'black') ? '#0b0b0c' : '#ffffff';
-      ctx.fillRect(0, 0, W, H);
-    }
+    ctx.fillStyle = /^#[0-9a-f]{6}$/i.test(opts.fill) ? opts.fill : (opts.fill === 'black' ? '#0b0b0c' : '#ffffff');
+    ctx.fillRect(0, 0, W, H);
 
     var pad = Math.round(Math.min(W, H) * clamp(opts.padding || 0, 0, 30) / 100);
     var availW = Math.max(1, W - pad * 2), availH = Math.max(1, H - pad * 2);
@@ -1235,7 +1239,14 @@
     var r = ratioById(state.ratio);
     $('#ratioHint').textContent = r.desc;
 
-    markChips($('#fillSeg'), 'data-fill', state.fill);
+    $$('#fillRow .swatch').forEach(function (b) {
+      var isCustom = b.id === 'customFillLabel';
+      var val = b.getAttribute('data-fill');
+      var on = isCustom ? state.customFill : (!state.customFill && state.fill === val);
+      b.classList.toggle('is-on', on);
+    });
+    $('#fillColor').value = /^#[0-9a-f]{6}$/i.test(state.fill) ? state.fill : '#f3f4f6';
+    $('#fillColorChip').style.background = state.fill;
     markChips($('#formatSeg'), 'data-format', state.format);
     $('#formatHint').textContent = state.format === 'png' ? 'PNG' : 'JPG';
     $('#padRange').value = String(state.padding);
@@ -1291,7 +1302,7 @@
   function savePrefs() {
     try {
       localStorage.setItem(PREFS_KEY, JSON.stringify({
-        ratio: state.ratio, fill: state.fill, padding: state.padding, format: state.format,
+        ratio: state.ratio, fill: state.fill, customFill: state.customFill, padding: state.padding, format: state.format,
         collage: {
           layoutId: collage.layoutId, ratio: collage.ratio, gap: collage.gap,
           radius: collage.radius, bg: collage.bg, fit: collage.fit, customBg: collage.customBg
@@ -1305,7 +1316,10 @@
       if (!raw) return;
       var p = JSON.parse(raw);
       if (p.ratio && ratioById(p.ratio).id === p.ratio) state.ratio = p.ratio;
-      if (p.fill === 'white' || p.fill === 'blur' || p.fill === 'black') state.fill = p.fill;
+      if (p.fill === 'white' || p.fill === 'blur') state.fill = '#ffffff';
+      else if (p.fill === 'black') state.fill = '#0b0b0c';
+      else if (/^#[0-9a-f]{6}$/i.test(p.fill)) state.fill = p.fill;
+      if (typeof p.customFill === 'boolean') state.customFill = p.customFill;
       if (typeof p.padding === 'number') state.padding = clamp(p.padding, 0, 15);
       if (p.format === 'png' || p.format === 'jpeg') state.format = p.format;
       var c = p.collage || {};
@@ -1359,11 +1373,26 @@
     });
 
     /* 비율·여백·포맷 */
-    $('#fillSeg').addEventListener('click', function (e) {
+    $('#fillRow').addEventListener('click', function (e) {
       var b = e.target.closest('[data-fill]');
       if (!b) return;
       state.fill = b.getAttribute('data-fill');
-      markChips($('#fillSeg'), 'data-fill', state.fill);
+      state.customFill = false;
+      syncResizeUI();
+      savePrefs();
+      refreshPreviews();
+    });
+    $('#customFillLabel').addEventListener('click', function (e) {
+      e.preventDefault();
+      $('#fillColor').click();
+    });
+    $('#fillColor').addEventListener('input', function (e) {
+      state.fill = e.target.value;
+      state.customFill = true;
+      $('#fillColorChip').style.background = state.fill;
+      $$('#fillRow .swatch').forEach(function (b) {
+        b.classList.toggle('is-on', b.id === 'customFillLabel');
+      });
       savePrefs();
       refreshPreviews();
     });
