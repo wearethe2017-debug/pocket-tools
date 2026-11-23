@@ -1807,7 +1807,7 @@
     if (!src.length) { toast('목록이 비어 있어요. 책을 먼저 담아 주세요.'); return; }
     try {
       var payload = await encodeList(src);
-      var url = location.origin + location.pathname + '?list=' + payload;
+      var url = location.origin + location.pathname + '#list=' + payload;
       var ok = await copyText(url);
       if (ok) toast('🔗 공유 링크를 복사했어요 · ' + src.length + '권');
       else showLink('공유 링크', url);
@@ -1870,8 +1870,9 @@
   }
 
   async function handleShareParam() {
+    var hashMatch = (location.hash || '').match(/#list=([^&]+)/);
     var params = new URLSearchParams(location.search);
-    var payload = params.get('list');
+    var payload = (hashMatch && hashMatch[1]) || params.get('list');
     if (!payload) return false;
     var data;
     try {
