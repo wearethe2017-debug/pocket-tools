@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light dark" />
 <meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#0e1014" media="(prefers-color-scheme: dark)" />
-<meta name="description" content="PDF↔이미지 변환, 이미지 압축·포맷 변환, 비율 리사이즈·콜라쥬, 장 볼 목록 자동 정리 — 모두 기기 안에서만 처리하는 포켓 도구." />
+<meta name="description" content="PDF↔이미지 변환, 이미지 압축·포맷 변환, 비율 리사이즈·콜라쥬, 장 볼 목록 자동 정리, 읽고 싶은 책 장바구니 — 모두 기기 안에서만 처리하는 포켓 도구." />
 <title>포켓툴 · 폰에서 바로 쓰는 미니 도구</title>
 <link rel="manifest" href="/pocket-tools/manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="192x192" href="/pocket-tools/icon-192.png" />
@@ -116,7 +116,7 @@
   <header>
     <span class="eyebrow">🔒 서버 전송 없음 · 기기 안에서 처리</span>
     <h1>포켓툴</h1>
-    <p class="sub">계약서·신분증 사본도 외부 사이트에 올리지 않고 <b>폰 안에서만</b> 변환·압축·리사이즈하고, 장 볼 목록은 적으면 카테고리별로 자동 정리됩니다. 설치 없이 링크로 바로 열립니다.</p>
+    <p class="sub">계약서·신분증 사본도 외부 사이트에 올리지 않고 <b>폰 안에서만</b> 변환·압축·리사이즈하고, 장 볼 목록과 읽고 싶은 책은 적으면 카테고리별로 자동 정리됩니다. 설치 없이 링크로 바로 열립니다.</p>
   </header>
 
   <button class="install" id="installBtn" type="button" hidden>
@@ -173,7 +173,7 @@
   <div class="section">
     <span class="s-emoji" aria-hidden="true">🛒</span>
     <h2>Shop</h2>
-    <span class="s-note">장 볼 때</span>
+    <span class="s-note">장보기 · 읽을 책</span>
   </div>
   <ul class="tools">
     <li>
@@ -183,6 +183,17 @@
           <span class="title"><h2>장 볼 목록 (장바구니)</h2></span>
           <span class="desc">“삼겹살 600g, 양배추 1개 / 우유 2L”처럼 주르륵 적으면 카테고리별로 자동 정리</span>
           <span class="chips"><span class="chip">수량 자동 분리</span><span class="chip">카테고리 자동</span><span class="chip">링크 공유</span></span>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
+    </li>
+    <li>
+      <a class="tool" href="./books/">
+        <span class="ico t-indigo" aria-hidden="true">📚</span>
+        <span class="body">
+          <span class="title"><h2>읽고 싶은 책</h2></span>
+          <span class="desc">대충 제목만 적으면 저자·분류·줄거리까지 찾아 쌓아두는 책 장바구니</span>
+          <span class="chips"><span class="chip">자동 검색</span><span class="chip">후보 확인</span><span class="chip">줄거리 2~3줄</span></span>
         </span>
         <span class="arrow" aria-hidden="true">›</span>
       </a>
