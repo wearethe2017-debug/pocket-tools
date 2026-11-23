@@ -1048,7 +1048,6 @@
       if (o) {
         if (!b.subjects || !b.subjects.length) b.subjects = o.subjects || [];
         if (!b.desc && o.desc && hasHangul(o.desc)) b.desc = o.desc;
-        if (!b.cover && o.cover) b.cover = o.cover;
         if (!b.year && o.year) b.year = o.year;
       }
       b.cat = classify(b.title, b.subjects, b.desc, b.subtitle);
@@ -1326,6 +1325,7 @@
         var b = document.createElement('button');
         b.type = 'button';
         b.className = 'pick cat-pick c-' + c.id + (draft.cat === c.id ? ' is-on' : '');
+        b.setAttribute('aria-pressed', draft.cat === c.id ? 'true' : 'false');
         b.textContent = c.emoji + ' ' + c.label;
         b.addEventListener('click', function () { draft.cat = c.id; drawCat(); });
         catBox.appendChild(b);
@@ -1346,6 +1346,7 @@
           var b = document.createElement('button');
           b.type = 'button';
           b.className = 'pick st-' + s.id + (draft.status === s.id ? ' is-on' : '');
+          b.setAttribute('aria-pressed', draft.status === s.id ? 'true' : 'false');
           b.textContent = s.emoji + ' ' + s.label;
           b.addEventListener('click', function () { draft.status = s.id; drawSt(); });
           stBox.appendChild(b);
@@ -1576,7 +1577,7 @@
 
     var src = filtered(all);
     src = src.slice().sort(function (a, b) {
-      return statusOrder(b) - statusOrder(a) || (b.at || 0) - (a.at || 0);
+      return statusOrder(a) - statusOrder(b) || (b.at || 0) - (a.at || 0);
     });
 
     listRoot.innerHTML = '';
