@@ -1,19 +1,20 @@
 /* 포켓 툴 Service Worker
  * 목적: 안드로이드 크롬에서 "앱 설치"가 뜨기 위한 최소 구현.
- *       네트워크 우선 + 실패 시 캐시 폴백(4개 페이지 미리 저장).
+ *       네트워크 우선 + 실패 시 캐시 폴백(5개 페이지 미리 저장).
  * 원칙: 기기 안에서만 처리하는 도구이므로 업로드·변환 데이터는 다루지 않는다.
  */
-const VERSION = 'pocket-tools-v1';
+const VERSION = 'pocket-tools-v2';
 const SCOPE = '/pocket-tools/';
 const CORE = [
   SCOPE,
   SCOPE + 'index.html',
   SCOPE + 'pdf-image/',
   SCOPE + 'image-compress/',
-  SCOPE + 'ratio-collage/'
+  SCOPE + 'ratio-collage/',
+  SCOPE + 'shopping/'
 ];
 
-/* 설치: 핵심 페이지 4개를 미리 캐시 (실패해도 설치는 계속) */
+/* 설치: 핵심 페이지 5개를 미리 캐시 (실패해도 설치는 계속) */
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(VERSION);

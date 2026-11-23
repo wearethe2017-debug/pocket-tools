@@ -6,8 +6,8 @@
 <meta name="color-scheme" content="light dark" />
 <meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#0e1014" media="(prefers-color-scheme: dark)" />
-<meta name="description" content="PDF↔이미지 변환, 이미지 압축·포맷 변환, 비율 리사이즈·콜라쥬 — 모두 기기 안에서만 처리하는 미니 도구 3종." />
-<title>포켓 툴 · 폰에서 바로 쓰는 미니 도구 3종</title>
+<meta name="description" content="PDF↔이미지 변환, 이미지 압축·포맷 변환, 비율 리사이즈·콜라쥬, 장 볼 목록 자동 정리 — 모두 기기 안에서만 처리하는 포켓 도구." />
+<title>포켓 툴 · 폰에서 바로 쓰는 미니 도구</title>
 <link rel="manifest" href="/pocket-tools/manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="192x192" href="/pocket-tools/icon-192.png" />
 <link rel="apple-touch-icon" href="/pocket-tools/icon-192.png" />
@@ -24,6 +24,7 @@
     --teal:#0e7c70; --teal-soft:#e7f4f1;
     --indigo:#4f46e5; --indigo-soft:#ecebfe;
     --rose:#e5484d; --rose-soft:#fdecec;
+    --amber:#b45309; --amber-soft:#fdf1e0;
   }
   @media (prefers-color-scheme: dark){
     :root{
@@ -33,6 +34,7 @@
       --teal:#3ec3b3; --teal-soft:#12312e;
       --indigo:#9c9bfa; --indigo-soft:#1e1f3a;
       --rose:#ff7b80; --rose-soft:#331b1d;
+      --amber:#f0b46a; --amber-soft:#31241a;
     }
   }
   *{box-sizing:border-box}
@@ -54,7 +56,12 @@
   h1{font-size:26px;line-height:1.25;letter-spacing:-.02em;margin:14px 0 8px}
   .sub{margin:0;color:var(--ink-soft);font-size:14.5px}
   .sub b{color:var(--ink);font-weight:700}
-  ul.tools{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:12px}
+  .section{display:flex;align-items:center;gap:9px;margin:26px 2px 2px}
+  .section .s-emoji{font-size:16px;line-height:1}
+  .section h2{font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--ink);text-transform:uppercase;margin:0}
+  .section .s-note{font-size:11.5px;font-weight:700;color:var(--muted);margin-left:auto}
+  .section:first-of-type{margin-top:22px}
+  ul.tools{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:12px}
   a.tool{
     display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:inherit;
     background:var(--card);border:1px solid var(--line);border-radius:18px;
@@ -71,6 +78,7 @@
   .t-teal{background:var(--teal-soft)}
   .t-indigo{background:var(--indigo-soft)}
   .t-rose{background:var(--rose-soft)}
+  .t-amber{background:var(--amber-soft)}
   .body{flex:1 1 auto;min-width:0}
   .title{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
   .title h2{font-size:16.5px;margin:0;letter-spacing:-.01em}
@@ -108,7 +116,7 @@
   <header>
     <span class="eyebrow">🔒 서버 전송 없음 · 기기 안에서 처리</span>
     <h1>포켓 툴</h1>
-    <p class="sub">계약서·신분증 사본도 외부 사이트에 올리지 않고, <b>폰 안에서만</b> 변환·압축·리사이즈하세요. 설치 없이 링크로 바로 열립니다.</p>
+    <p class="sub">계약서·신분증 사본도 외부 사이트에 올리지 않고 <b>폰 안에서만</b> 변환·압축·리사이즈하고, 장 볼 목록은 적으면 카테고리별로 자동 정리됩니다. 설치 없이 링크로 바로 열립니다.</p>
   </header>
 
   <button class="install" id="installBtn" type="button" hidden>
@@ -121,6 +129,11 @@
   </button>
   <p class="hint" id="installHint" hidden>설치 창을 닫았다면 크롬 오른쪽 위 <b>⋮ → 홈 화면에 추가</b>로도 설치할 수 있어요.</p>
 
+  <div class="section">
+    <span class="s-emoji" aria-hidden="true">📷</span>
+    <h2>Photo</h2>
+    <span class="s-note">사진 · PDF</span>
+  </div>
   <ul class="tools">
     <li>
       <a class="tool" href="./pdf-image/">
@@ -151,6 +164,25 @@
           <span class="title"><h2>비율 리사이즈 &amp; 콜라쥬</h2></span>
           <span class="desc">1:1 · 4:5 · 16:9에 맞춰 안 잘리게, 남는 여백은 흰색·블러로</span>
           <span class="chips"><span class="chip">SNS 비율</span><span class="chip">여백 채우기</span><span class="chip">2~9장 콜라쥬</span></span>
+        </span>
+        <span class="arrow" aria-hidden="true">›</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="section">
+    <span class="s-emoji" aria-hidden="true">🛒</span>
+    <h2>Shop</h2>
+    <span class="s-note">장 볼 때</span>
+  </div>
+  <ul class="tools">
+    <li>
+      <a class="tool" href="./shopping/">
+        <span class="ico t-amber" aria-hidden="true">🛒</span>
+        <span class="body">
+          <span class="title"><h2>장 볼 목록 (장바구니)</h2></span>
+          <span class="desc">“삼겹살 600g, 양배추 1개 / 우유 2L”처럼 주르륵 적으면 카테고리별로 자동 정리</span>
+          <span class="chips"><span class="chip">수량 자동 분리</span><span class="chip">카테고리 자동</span><span class="chip">링크 공유</span></span>
         </span>
         <span class="arrow" aria-hidden="true">›</span>
       </a>
