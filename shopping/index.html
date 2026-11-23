@@ -916,6 +916,11 @@
   function groupItems(src) {
     var groups = [];
     if (state.group === 'tag') {
+      // 태그 필터 중이면 그 태그 하나로 묶어 보여 준다
+      if (state.filter !== 'all' && state.filter !== 'none') {
+        var ft = normTag(state.filter);
+        if (ft) return [{ kind: 'tag', label: '#' + ft, items: src.slice().sort(byOrder) }];
+      }
       availableTags(src).forEach(function (t) {
         var k = tagKey(t);
         var list = src.filter(function (it) { return tagKey(primaryTag(it)) === k; });
