@@ -543,8 +543,9 @@
     maxLen = maxLen || 200;
     var t = cleanText(raw);
     if (!t) return '';
-    t = t.replace(/^[\s"'“”‘’·•\-–—.…]+/, '').replace(/[\s"'“”‘’]+$/, '');
-    t = t.replace(/\s*--\s*$/, '').replace(/\s*-\s*$/, '');
+    t = t.replace(/^[\s"“”·•\-–—.…]+/, '');
+    t = t.replace(/\s*--+\s*$/, '').replace(/\s*-\s*$/, '').trim();
+    t = t.replace(/["“”]+$/, '').trim();
     if (!t) return '';
     if (t.length <= maxLen) return t;
 
