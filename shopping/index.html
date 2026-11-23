@@ -220,7 +220,7 @@
   .sheet-wrap{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center}
   .sheet-backdrop{position:absolute;inset:0;background:rgba(8,10,14,.5)}
   .sheet{
-    position:relative;width:100%;max-width:520px;
+    position:relative;width:100%;max-width:520px;max-height:90dvh;overflow-y:auto;overscroll-behavior:contain;
     background:var(--card);border-radius:22px 22px 0 0;
     padding:8px 16px calc(env(safe-area-inset-bottom) + 16px);
     box-shadow:0 -12px 44px rgba(0,0,0,.3);
