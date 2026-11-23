@@ -961,10 +961,10 @@
         if (normKey(b.title) === normKey(cur.title) && b.title.length < cur.title.length) cur.title = b.title;
         if (!cur.cover && b.cover) cur.cover = b.cover;
         if (!cur.isbn && b.isbn) cur.isbn = b.isbn;
-        if (!cur.desc && b.desc) cur.desc = b.desc;
+        if (!cur.desc || (!hasHangul(cur.desc) && hasHangul(b.desc))) { if (b.desc) cur.desc = b.desc; }
         if (!cur.subtitle && b.subtitle) cur.subtitle = b.subtitle;
         if (!cur.publisher && b.publisher) cur.publisher = b.publisher;
-        if (!cur.author && b.author) { cur.author = b.author; byKey[t + '|' + a] = hit; }
+        if (!cur.author && b.author) { cur.author = b.author; byKey[t + '|' + a] = hit; delete authorless[t]; }
         if (!cur.subjects || !cur.subjects.length) cur.subjects = b.subjects;
         if (cur.year && b.year && Number(b.year) < Number(cur.year)) cur.year = b.year;
         return;
@@ -1051,6 +1051,8 @@
         if (!b.year && o.year) b.year = o.year;
       }
       b.cat = classify(b.title, b.subjects, b.desc, b.subtitle);
+      /* 한국어 제목에 영어 소개글이 섞이면 카드에 “줄거리 없음”으로 두고 직접 적게 한다 */
+      if (b.title && hasHangul(b.title) && b.desc && !hasHangul(b.desc)) b.desc = '';
       b.score = scoreBook(b, q);
     });
     found.sort(function (a, b) {
